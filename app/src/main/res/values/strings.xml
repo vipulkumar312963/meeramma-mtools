@@ -1,0 +1,12 @@
+<resources>
+    <!-- Phone menu name (short) -->
+    <string name="app_name">MTools</string>
+
+    <!-- Inside app name (full) -->
+    <string name="app_title">Meeramma Tools</string>
+
+    <!-- Other strings -->
+    <string name="foundation_name">Meeramma Foundation</string>
+    <string name="website">www.meerammafoundation.org</string>
+    <string name="tagline">Free · Offline · No Ads</string>
+</resources>
