@@ -32,6 +32,25 @@
                 android:textSize="18sp"
                 android:textColor="@color/white"
                 android:layout_marginEnd="12dp" />
+            <ImageView
+                android:id="@+id/ivEditBill"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_edit"
+                app:tint="@color/primary"
+                android:layout_marginStart="8dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <ImageView
+                android:id="@+id/ivDeleteBill"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_delete"
+                app:tint="@color/text_secondary"
+                android:layout_marginStart="8dp"
+                android:clickable="true"
+                android:focusable="true" />
 
             <LinearLayout
                 android:layout_width="0dp"

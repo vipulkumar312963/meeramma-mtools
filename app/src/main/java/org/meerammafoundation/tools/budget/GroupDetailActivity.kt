@@ -26,6 +26,7 @@ class GroupDetailActivity : AppCompatActivity() {
     private lateinit var fabAdd: FloatingActionButton
     private lateinit var ivSettings: ImageView
     private lateinit var backButton: ImageView
+    private lateinit var pageCallback: ViewPager2.OnPageChangeCallback
 
     companion object {
         const val EXTRA_GROUP_ID = "extra_group_id"
@@ -35,10 +36,7 @@ class GroupDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate started")
-
         setContentView(R.layout.activity_group_detail)
-        Log.d(TAG, "ContentView set")
 
         // Get group data from intent
         val groupId = intent.getLongExtra(EXTRA_GROUP_ID, -1)
@@ -55,11 +53,9 @@ class GroupDetailActivity : AppCompatActivity() {
 
         try {
             // Initialize ViewModel
-            Log.d(TAG, "Initializing ViewModel")
             viewModel = ViewModelProvider(this)[BillSplitterViewModel::class.java]
 
             // Initialize views
-            Log.d(TAG, "Initializing views")
             backButton = findViewById(R.id.backButton)
             tvGroupName = findViewById(R.id.tvGroupName)
             ivSettings = findViewById(R.id.ivSettings)
@@ -67,21 +63,14 @@ class GroupDetailActivity : AppCompatActivity() {
             viewPager = findViewById(R.id.viewPager)
             fabAdd = findViewById(R.id.fabAdd)
 
-            Log.d(TAG, "All views found successfully")
-
             // Set group name
             tvGroupName.text = groupName
-            Log.d(TAG, "Group name set: $groupName")
 
             // Back button click listener
-            backButton.setOnClickListener {
-                Log.d(TAG, "Back button clicked")
-                finish()
-            }
+            backButton.setOnClickListener { finish() }
 
             // Settings icon click listener
             ivSettings.setOnClickListener {
-                Log.d(TAG, "Settings icon clicked")
                 val intent = Intent(this, GroupSettingsActivity::class.java).apply {
                     putExtra(GroupSettingsActivity.EXTRA_GROUP_ID, groupId)
                     putExtra(GroupSettingsActivity.EXTRA_GROUP_NAME, groupName)
@@ -90,13 +79,20 @@ class GroupDetailActivity : AppCompatActivity() {
             }
 
             // Create adapter with fragments
-            Log.d(TAG, "Creating GroupPagerAdapter with groupId: $groupId")
             val adapter = GroupPagerAdapter(this, groupId)
             viewPager.adapter = adapter
-            Log.d(TAG, "ViewPager adapter set successfully")
+
+            // Setup page callback with leak prevention
+            pageCallback = object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    fabAdd.visibility = if (position <= 1) View.VISIBLE else View.GONE
+                    Log.d(TAG, "Tab changed to position: $position, FAB visibility: ${fabAdd.visibility}")
+                }
+            }
+            viewPager.registerOnPageChangeCallback(pageCallback)
 
             // Connect TabLayout with ViewPager
-            Log.d(TAG, "Attaching TabLayoutMediator")
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                 tab.text = when (position) {
                     0 -> "Members"
@@ -105,16 +101,9 @@ class GroupDetailActivity : AppCompatActivity() {
                     else -> ""
                 }
             }.attach()
-            Log.d(TAG, "TabLayoutMediator attached successfully")
 
-            // Handle FAB visibility based on current tab
-            viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    super.onPageSelected(position)
-                    fabAdd.visibility = if (position <= 1) View.VISIBLE else View.GONE
-                    Log.d(TAG, "Tab changed to position: $position, FAB visibility: ${fabAdd.visibility}")
-                }
-            })
+            // ✅ Optional: Set initial FAB state based on current tab (0 = Members)
+            showFab()
 
             Log.d(TAG, "onCreate completed successfully")
 
@@ -125,15 +114,28 @@ class GroupDetailActivity : AppCompatActivity() {
         }
     }
 
-    fun setFabClickListener(listener: View.OnClickListener) {
-        fabAdd.setOnClickListener(listener)
+    // Safer FAB listener with null safety
+    fun setFabClickListener(listener: View.OnClickListener?) {
+        fabAdd.setOnClickListener(null)  // Clear old listener first
+        if (listener != null) {
+            fabAdd.setOnClickListener(listener)
+        }
     }
 
+    // Show FAB based on current tab
     fun showFab() {
-        fabAdd.visibility = View.VISIBLE
+        val pos = viewPager.currentItem
+        fabAdd.visibility = if (pos <= 1) View.VISIBLE else View.GONE
     }
 
     fun hideFab() {
         fabAdd.visibility = View.GONE
+    }
+
+    // Clean up callback to prevent memory leaks
+    override fun onDestroy() {
+        super.onDestroy()
+        viewPager.unregisterOnPageChangeCallback(pageCallback)
+        Log.d(TAG, "onDestroy - Page callback unregistered")
     }
 }

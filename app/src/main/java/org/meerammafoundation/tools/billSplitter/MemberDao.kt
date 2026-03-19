@@ -2,11 +2,11 @@ package org.meerammafoundation.tools.billSplitter
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import org.meerammafoundation.tools.billSplitter.Member
 
 @Dao
 interface MemberDao {
-    @Insert
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMember(member: Member): Long
 
     @Update

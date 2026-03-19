@@ -96,6 +96,7 @@
             android:layout_marginBottom="16dp"
             android:popupBackground="@color/card_background" />
 
+
         <!-- Split Type -->
         <TextView
             android:layout_width="wrap_content"
@@ -130,6 +131,60 @@
                 android:text="Custom"
                 android:textColor="@color/text_primary" />
         </RadioGroup>
+
+        <!-- Member Selection for Equal Split -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Members to Include"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:id="@+id/layoutMemberSelection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/card_background"
+            android:padding="12dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Include members:"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:id="@+id/containerMemberCheckboxes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/btnSelectAll"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Select All"
+                android:textSize="12sp"
+                android:backgroundTint="@color/primary"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btnDeselectAll"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Deselect All"
+                android:textSize="12sp"
+                android:backgroundTint="@color/text_secondary"
+                android:layout_marginTop="8dp"/>
+        </LinearLayout>
 
         <!-- Custom split container -->
         <LinearLayout

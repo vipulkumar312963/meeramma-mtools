@@ -11,14 +11,19 @@ import java.text.NumberFormat
 import java.util.Locale
 
 class BalanceAdapter(
-    private val balances: Map<Long, Double>,
+    private var balances: Map<Long, Double>,
     private val getMemberName: (Long) -> String
 ) : RecyclerView.Adapter<BalanceAdapter.BalanceViewHolder>() {
 
-    private val entries = balances.entries.toList()
     private val format = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
 
+    fun updateData(newBalances: Map<Long, Double>) {
+        balances = newBalances
+        notifyDataSetChanged()
+    }
+
     class BalanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         private val tvMemberName: TextView = itemView.findViewById(R.id.tvMemberName)
         private val tvBalance: TextView = itemView.findViewById(R.id.tvBalance)
 
@@ -42,9 +47,10 @@ class BalanceAdapter(
     }
 
     override fun onBindViewHolder(holder: BalanceViewHolder, position: Int) {
-        val entry = entries[position]
+        // ✅ Always get fresh entry list from current balances
+        val entry = balances.entries.toList()[position]
         holder.bind(getMemberName(entry.key), entry.value, format)
     }
 
-    override fun getItemCount() = entries.size
+    override fun getItemCount(): Int = balances.size
 }

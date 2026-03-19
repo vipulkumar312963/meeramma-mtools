@@ -2,11 +2,11 @@ package org.meerammafoundation.tools.billSplitter
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import org.meerammafoundation.tools.billSplitter.Group
 
 @Dao
 interface GroupDao {
-    @Insert
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGroup(group: Group): Long
 
     @Update
@@ -15,7 +15,7 @@ interface GroupDao {
     @Delete
     suspend fun deleteGroup(group: Group)
 
-    @Query("SELECT * FROM groups ORDER BY createdAt DESC")
+    @Query("SELECT * FROM groups ORDER BY created_at DESC")
     fun getAllGroups(): Flow<List<Group>>
 
     @Query("SELECT * FROM groups WHERE id = :groupId")

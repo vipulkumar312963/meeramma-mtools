@@ -2,14 +2,14 @@ package org.meerammafoundation.tools.billSplitter
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import org.meerammafoundation.tools.billSplitter.BillShare
 
 @Dao
 interface BillShareDao {
-    @Insert
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBillShare(billShare: BillShare)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllBillShares(billShares: List<BillShare>)
 
     @Query("SELECT * FROM bill_shares WHERE billId = :billId")

@@ -15,6 +15,7 @@ class BalancesFragment : Fragment() {
     private lateinit var viewModel: BillSplitterViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: BalanceAdapter
+
     private var groupId: Long = 0
     private val memberNames = mutableMapOf<Long, String>()
 
@@ -30,9 +31,11 @@ class BalancesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         arguments?.let {
             groupId = it.getLong("groupId")
         }
+
         viewModel = ViewModelProvider(requireActivity())[BillSplitterViewModel::class.java]
     }
 
@@ -40,20 +43,30 @@ class BalancesFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+
         val view = inflater.inflate(R.layout.fragment_balances, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerViewBalances)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Load member names
+        // ✅ Create adapter ONCE with empty map
+        adapter = BalanceAdapter(emptyMap()) { memberId ->
+            memberNames[memberId] ?: "Unknown"
+        }
+        recyclerView.adapter = adapter
+
+        // ✅ Load member names (clear first to avoid stale data)
         viewModel.getMembers(groupId).observe(viewLifecycleOwner) { members ->
-            members.forEach { memberNames[it.id] = it.name }
+            memberNames.clear()
+            members.forEach {
+                memberNames[it.id] = it.name
+            }
         }
 
+        // ✅ Update balances only (adapter handles the rest)
         viewModel.getBalances(groupId).observe(viewLifecycleOwner) { balances ->
-            adapter = BalanceAdapter(balances) { memberId -> memberNames[memberId] ?: "Unknown" }
-            recyclerView.adapter = adapter
+            adapter.updateData(balances)
         }
 
         return view

@@ -5,7 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BillDao {
-    @Insert
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBill(bill: Bill): Long
 
     @Update
@@ -14,19 +15,10 @@ interface BillDao {
     @Delete
     suspend fun deleteBill(bill: Bill)
 
-    @Query("SELECT * FROM bills WHERE groupId = :groupId ORDER BY createdAt DESC")
+    @Query("SELECT * FROM bills WHERE groupId = :groupId ORDER BY created_at DESC")
     fun getBillsByGroup(groupId: Long): Flow<List<Bill>>
 
     @Transaction
     @Query("SELECT * FROM bills WHERE id = :billId")
     fun getBillWithShares(billId: Long): Flow<BillWithShares>
 }
-
-data class BillWithShares(
-    @Embedded val bill: Bill,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "billId"
-    )
-    val shares: List<BillShare>
-)

@@ -19,4 +19,13 @@ class GroupPagerAdapter(
             else -> throw IllegalStateException("Invalid position $position")
         }
     }
+
+    // ✅ Prevent fragment reuse bugs after rotation / process death
+    override fun getItemId(position: Int): Long {
+        return position.toLong()  // Stable ID based on position
+    }
+
+    override fun containsItem(itemId: Long): Boolean {
+        return itemId in 0..2  // Check if ID is valid
+    }
 }
