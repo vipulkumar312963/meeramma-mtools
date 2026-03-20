@@ -87,23 +87,7 @@
         android:gravity="start|center_vertical"
         android:paddingStart="16dp" />
 
-    <!-- Archive Button -->
-    <Button
-        android:id="@+id/btnArchive"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginBottom="12dp"
-        android:backgroundTint="@color/primary_light"
-        android:text="Archive Group"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:drawableStart="@android:drawable/ic_menu_save"
-        android:drawablePadding="8dp"
-        android:gravity="start|center_vertical"
-        android:paddingStart="16dp" />
-
-    <!-- Delete Button -->
+        <!-- Delete Button -->
     <Button
         android:id="@+id/btnDelete"
         android:layout_width="match_parent"

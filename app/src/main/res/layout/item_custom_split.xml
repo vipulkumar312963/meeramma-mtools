@@ -20,7 +20,7 @@
         android:id="@+id/etShareAmount"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:hint="Amount"
+        android:hint="0 (optional)"
         android:inputType="numberDecimal"
         android:padding="8dp"
         android:background="@drawable/search_background"

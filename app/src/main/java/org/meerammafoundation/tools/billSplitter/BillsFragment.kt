@@ -209,24 +209,32 @@ class BillsFragment : Fragment() {
         val containerCustomSplit = dialogView.findViewById<LinearLayout>(R.id.containerCustomSplit)
         val layoutMemberSelection = dialogView.findViewById<LinearLayout>(R.id.layoutMemberSelection)
         val containerMemberCheckboxes = dialogView.findViewById<LinearLayout>(R.id.containerMemberCheckboxes)
-        val btnSelectAll = dialogView.findViewById<Button>(R.id.btnSelectAll)
-        val btnDeselectAll = dialogView.findViewById<Button>(R.id.btnDeselectAll)
-
+        val customSplitAmounts = mutableMapOf<Long, Double>()
         val selectedMemberIds = mutableSetOf<Long>()
 
         if (billToEdit != null) {
-            // For edit, we need to handle observer carefully
+            // Check if this is a custom split bill
+            val isCustomSplit = billToEdit.splitType == SplitType.CUSTOM
+
+            // ✅ Store LiveData reference to prevent memory leak
             val liveData = viewModel.getBillWithShares(billToEdit.id)
 
             // Remove any existing observer first
             shareLiveDataMap[billToEdit.id]?.removeObservers(viewLifecycleOwner)
 
-            // Store and observe
+            // Store the new LiveData reference
             shareLiveDataMap[billToEdit.id] = liveData
+
             liveData.observe(viewLifecycleOwner) { billWithShares ->
                 selectedMemberIds.clear()
-                selectedMemberIds.addAll(billWithShares.shares.map { it.memberId })
+                customSplitAmounts.clear()
 
+                billWithShares.shares.forEach { share ->
+                    selectedMemberIds.add(share.memberId)
+                    customSplitAmounts[share.memberId] = share.shareAmount
+                }
+
+                // Update checkboxes for equal split
                 for (i in 0 until containerMemberCheckboxes.childCount) {
                     val row = containerMemberCheckboxes.getChildAt(i)
                     val cbInclude = row.findViewById<CheckBox>(R.id.cbIncludeMember)
@@ -235,20 +243,67 @@ class BillsFragment : Fragment() {
                         cbInclude.isChecked = selectedMemberIds.contains(memberId)
                     }
                 }
+
+                // ✅ FIX: For custom split, populate fields after creating them
+                if (isCustomSplit) {
+                    // First, ensure custom split fields are created
+                    containerCustomSplit.removeAllViews()
+                    val inflater = LayoutInflater.from(requireContext())
+
+                    memberList.forEach { member ->
+                        val row = inflater.inflate(R.layout.item_custom_split, containerCustomSplit, false)
+                        val tvName = row.findViewById<TextView>(R.id.tvMemberName)
+                        val etShare = row.findViewById<EditText>(R.id.etShareAmount)
+
+                        tvName.text = member.name
+
+                        val amount = customSplitAmounts[member.id] ?: 0.0
+                        if (amount > 0) {
+                            etShare.setText(amount.toString())
+                        } else {
+                            etShare.text.clear()
+                        }
+
+                        containerCustomSplit.addView(row)
+                    }
+                }
             }
 
+            // Set basic fields
             etDescription.setText(billToEdit.description)
             etAmount.setText(billToEdit.amount.toString())
 
+            // Set payer spinner
             val payerIndex = memberList.indexOfFirst { it.id == billToEdit.paidById }
             if (payerIndex >= 0) {
                 spinnerPaidBy.setSelection(payerIndex)
             }
 
+            // ✅ FIX: Set split type AND immediately update visibility
             if (billToEdit.splitType == SplitType.EQUAL) {
                 radioEqual.isChecked = true
+                layoutCustomSplit.visibility = View.GONE
+                layoutMemberSelection.visibility = View.VISIBLE
             } else {
                 radioCustom.isChecked = true
+                layoutCustomSplit.visibility = View.VISIBLE
+                layoutMemberSelection.visibility = View.GONE
+
+                // ✅ IMPORTANT: Explicitly create custom split fields
+                containerCustomSplit.removeAllViews()
+                val inflater = LayoutInflater.from(requireContext())
+
+                memberList.forEach { member ->
+                    val row = inflater.inflate(R.layout.item_custom_split, containerCustomSplit, false)
+                    val tvName = row.findViewById<TextView>(R.id.tvMemberName)
+                    val etShare = row.findViewById<EditText>(R.id.etShareAmount)
+
+                    tvName.text = member.name
+                    // Amounts will be filled when LiveData loads
+                    etShare.text.clear()
+
+                    containerCustomSplit.addView(row)
+                }
             }
         }
 
@@ -293,22 +348,49 @@ class BillsFragment : Fragment() {
             checkboxes.add(cbInclude)
         }
 
-        btnSelectAll.setOnClickListener {
-            checkboxes.forEach { it.isChecked = true }
-        }
-
-        btnDeselectAll.setOnClickListener {
-            checkboxes.forEach { it.isChecked = false }
-        }
 
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId == R.id.radioEqual) {
                 layoutCustomSplit.visibility = View.GONE
                 layoutMemberSelection.visibility = View.VISIBLE
+                // Clear custom split fields when switching to equal split
+                for (i in 0 until containerCustomSplit.childCount) {
+                    val row = containerCustomSplit.getChildAt(i)
+                    val etShare = row.findViewById<EditText>(R.id.etShareAmount)
+                    etShare.text.clear()
+                }
             } else {
                 layoutCustomSplit.visibility = View.VISIBLE
                 layoutMemberSelection.visibility = View.GONE
-                setupCustomSplitFields(containerCustomSplit)
+
+                // ✅ Create custom split fields
+                containerCustomSplit.removeAllViews()
+                val inflater = LayoutInflater.from(requireContext())
+
+                memberList.forEach { member ->
+                    val row = inflater.inflate(R.layout.item_custom_split, containerCustomSplit, false)
+                    val tvName = row.findViewById<TextView>(R.id.tvMemberName)
+                    val etShare = row.findViewById<EditText>(R.id.etShareAmount)
+
+                    tvName.text = member.name
+                    containerCustomSplit.addView(row)
+                }
+
+                // ✅ If editing and we have custom split amounts, fill them
+                if (billToEdit != null && billToEdit.splitType == SplitType.CUSTOM && customSplitAmounts.isNotEmpty()) {
+                    for (i in 0 until containerCustomSplit.childCount) {
+                        val row = containerCustomSplit.getChildAt(i)
+                        val etShare = row.findViewById<EditText>(R.id.etShareAmount)
+                        val memberId = memberList[i].id
+                        val amount = customSplitAmounts[memberId] ?: 0.0
+
+                        if (amount > 0) {
+                            etShare.setText(amount.toString())
+                        } else {
+                            etShare.text.clear()
+                        }
+                    }
+                }
             }
         }
 
@@ -351,24 +433,36 @@ class BillsFragment : Fragment() {
                 if (splitType == SplitType.CUSTOM) {
                     val shares = mutableListOf<Pair<Long, Double>>()
                     var totalShare = 0.0
+
                     for (i in 0 until containerCustomSplit.childCount) {
                         val row = containerCustomSplit.getChildAt(i)
                         val etShare = row.findViewById<EditText>(R.id.etShareAmount)
                         val shareStr = etShare.text.toString().trim()
-                        if (shareStr.isEmpty()) {
-                            etShare.error = "Enter share"
+
+                        // ✅ Treat blank as 0
+                        val share = if (shareStr.isEmpty()) {
+                            0.0
+                        } else {
+                            shareStr.toDoubleOrNull() ?: 0.0
+                        }
+
+                        // ✅ Allow zero or positive amounts (no negative)
+                        if (share < 0) {
+                            etShare.error = "Amount cannot be negative"
                             return@setOnClickListener
                         }
-                        val share = shareStr.toDoubleOrNull()
-                        if (share == null || share <= 0) {
-                            etShare.error = "Invalid amount"
-                            return@setOnClickListener
-                        }
+
                         shares.add(Pair(memberList[i].id, share))
                         totalShare += share
                     }
+
+                    // ✅ Check if total matches bill amount
                     if (Math.abs(totalShare - amount) > 0.01) {
-                        Toast.makeText(requireContext(), "Shares must sum to ₹$amount", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Total shares must sum to ₹$amount\nCurrent total: ₹${String.format("%.2f", totalShare)}",
+                            Toast.LENGTH_LONG
+                        ).show()
                         return@setOnClickListener
                     }
 
@@ -383,6 +477,7 @@ class BillsFragment : Fragment() {
                         )
                         viewModel.updateBill(updatedBill, shares)
                     }
+
                 } else {
                     val selectedMembers = checkboxes.filter { it.isChecked }.map { it.tag as Long }
 
@@ -479,7 +574,7 @@ class BillsFragment : Fragment() {
         }
     }
 
-    private fun setupCustomSplitFields(container: LinearLayout) {
+    private fun setupCustomSplitFields(container: LinearLayout, existingAmounts: Map<Long, Double> = emptyMap()) {
         container.removeAllViews()
         val inflater = LayoutInflater.from(requireContext())
 
@@ -489,6 +584,15 @@ class BillsFragment : Fragment() {
             val etShare = row.findViewById<EditText>(R.id.etShareAmount)
 
             tvName.text = member.name
+
+            // Pre-fill if editing and amount exists
+            val existingAmount = existingAmounts[member.id]
+            if (existingAmount != null && existingAmount > 0) {
+                etShare.setText(existingAmount.toString())
+            } else {
+                etShare.text.clear()
+            }
+
             container.addView(row)
         }
     }

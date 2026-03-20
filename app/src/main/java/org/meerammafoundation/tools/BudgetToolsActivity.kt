@@ -12,6 +12,8 @@ import org.meerammafoundation.tools.budget.ExpenseTrackerActivity
 import org.meerammafoundation.tools.budget.IncomeVsExpensesActivity
 import org.meerammafoundation.tools.budget.BillSplitterMainActivity
 import org.meerammafoundation.tools.budget.DebtPayoffActivity
+import org.meerammafoundation.tools.budget.savings.SavingsGoalsActivity
+import org.meerammafoundation.tools.budget.reminder.BillReminderActivity
 
 class BudgetToolsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,11 +69,13 @@ class BudgetToolsActivity : AppCompatActivity() {
         }
 
         cardSavingsGoals.setOnClickListener {
-            Toast.makeText(this, "🎯 Savings Goals - Coming Soon!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, SavingsGoalsActivity::class.java)
+            startActivity(intent)
         }
 
         cardBillReminder.setOnClickListener {
-            Toast.makeText(this, "⏰ Bill Reminder - Coming Soon!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, BillReminderActivity::class.java)
+            startActivity(intent)
         }
 
         // Bottom navigation

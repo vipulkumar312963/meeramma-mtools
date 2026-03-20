@@ -67,6 +67,12 @@
         <activity
             android:name="org.meerammafoundation.tools.budget.DebtPayoffActivity"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".budget.savings.SavingsGoalsActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".budget.reminder.BillReminderActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

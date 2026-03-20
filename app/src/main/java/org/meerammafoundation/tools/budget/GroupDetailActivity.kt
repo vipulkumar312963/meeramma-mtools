@@ -27,6 +27,7 @@ class GroupDetailActivity : AppCompatActivity() {
     private lateinit var ivSettings: ImageView
     private lateinit var backButton: ImageView
     private lateinit var pageCallback: ViewPager2.OnPageChangeCallback
+    private var groupId: Long = 0
 
     companion object {
         const val EXTRA_GROUP_ID = "extra_group_id"
@@ -39,7 +40,7 @@ class GroupDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_group_detail)
 
         // Get group data from intent
-        val groupId = intent.getLongExtra(EXTRA_GROUP_ID, -1)
+        groupId = intent.getLongExtra(EXTRA_GROUP_ID, -1)
         val groupName = intent.getStringExtra(EXTRA_GROUP_NAME) ?: "Group"
 
         Log.d(TAG, "Opening group detail - ID: $groupId, Name: $groupName")
@@ -55,7 +56,7 @@ class GroupDetailActivity : AppCompatActivity() {
             // Initialize ViewModel
             viewModel = ViewModelProvider(this)[BillSplitterViewModel::class.java]
 
-            // Initialize views
+            // ✅ Initialize views FIRST (before observer)
             backButton = findViewById(R.id.backButton)
             tvGroupName = findViewById(R.id.tvGroupName)
             ivSettings = findViewById(R.id.ivSettings)
@@ -65,6 +66,21 @@ class GroupDetailActivity : AppCompatActivity() {
 
             // Set group name
             tvGroupName.text = groupName
+
+            // ✅ NOW safe to observe (views are initialized)
+            viewModel.getGroupById(groupId).observe(this) { group ->
+                if (group == null) {
+                    // Group was deleted, close this activity
+                    Log.d(TAG, "Group deleted, closing activity")
+                    Toast.makeText(this, "Group deleted", Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    // ✅ Fixed: compare strings properly
+                    if (tvGroupName.text.toString() != group.name) {
+                        tvGroupName.text = group.name
+                    }
+                }
+            }
 
             // Back button click listener
             backButton.setOnClickListener { finish() }
@@ -102,7 +118,7 @@ class GroupDetailActivity : AppCompatActivity() {
                 }
             }.attach()
 
-            // ✅ Optional: Set initial FAB state based on current tab (0 = Members)
+            // Set initial FAB state based on current tab (0 = Members)
             showFab()
 
             Log.d(TAG, "onCreate completed successfully")

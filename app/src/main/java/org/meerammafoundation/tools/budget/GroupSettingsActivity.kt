@@ -18,7 +18,6 @@ class GroupSettingsActivity : AppCompatActivity() {
     private lateinit var viewModel: BillSplitterViewModel
     private lateinit var tvGroupName: TextView
     private lateinit var btnRename: Button
-    private lateinit var btnArchive: Button
     private lateinit var btnDelete: Button
     private var currentGroup: Group? = null
     private var groupId: Long = -1
@@ -47,7 +46,6 @@ class GroupSettingsActivity : AppCompatActivity() {
         // Initialize views
         tvGroupName = findViewById(R.id.tvGroupName)
         btnRename = findViewById(R.id.btnRename)
-        btnArchive = findViewById(R.id.btnArchive)
         btnDelete = findViewById(R.id.btnDelete)
 
         tvGroupName.text = groupName
@@ -60,10 +58,6 @@ class GroupSettingsActivity : AppCompatActivity() {
         // Set click listeners
         btnRename.setOnClickListener {
             showRenameDialog()
-        }
-
-        btnArchive.setOnClickListener {
-            showArchiveDialog()
         }
 
         btnDelete.setOnClickListener {
@@ -97,21 +91,6 @@ class GroupSettingsActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showArchiveDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Archive Group")
-            .setMessage("Are you sure you want to archive this group? Archived groups can be restored later.")
-            .setPositiveButton("Archive") { _, _ ->
-                currentGroup?.let { group ->
-                    // You can implement actual archive functionality later
-                    Toast.makeText(this, "Group archived (feature coming soon)", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
-
     private fun showDeleteDialog() {
         AlertDialog.Builder(this)
             .setTitle("Delete Group")
@@ -120,6 +99,7 @@ class GroupSettingsActivity : AppCompatActivity() {
                 currentGroup?.let { group ->
                     viewModel.deleteGroup(group)
                     Toast.makeText(this, "Group deleted", Toast.LENGTH_SHORT).show()
+                    // ✅ Just close settings - let GroupDetail handle the rest
                     finish()
                 }
             }
