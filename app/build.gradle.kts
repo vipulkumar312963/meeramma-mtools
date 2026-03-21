@@ -4,19 +4,22 @@ plugins {
     id("kotlin-kapt")
 }
 
-
 android {
     namespace = "org.meerammafoundation.tools"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "org.meerammafoundation.tools"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 2
-        versionName = "1.1-bill-splitter"
+        targetSdk = 35
+        versionCode = 3
+        versionName = "1.2-stable-build"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
@@ -28,35 +31,37 @@ android {
             )
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
+    // Core Android
     implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.activity:activity-compose:1.8.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
-    // CardView for rounded cards
+    // CardView
     implementation("androidx.cardview:cardview:1.0.0")
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    // Room components
-    implementation("androidx.room:room-runtime:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
+    // Room
+    implementation("androidx.room:room-runtime:2.7.1")
+    kapt("androidx.room:room-compiler:2.7.1")
+    implementation("androidx.room:room-ktx:2.7.1")
 
-    // ViewModel and LiveData
+    // Lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -64,6 +69,8 @@ dependencies {
     // RecyclerView
     implementation("androidx.recyclerview:recyclerview:1.3.2")
 
-    // Material Dialogs (for better UX)
-    implementation("com.google.android.material:material:1.11.0")
+    // Testing
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
