@@ -78,7 +78,7 @@ class BillReminderAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BillViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_bill_reminder, parent, false)
+            .inflate(R.layout.reminder_item_bill_reminder, parent, false)
         return BillViewHolder(view)
     }
 

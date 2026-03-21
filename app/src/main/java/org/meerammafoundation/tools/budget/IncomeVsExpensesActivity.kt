@@ -33,7 +33,7 @@ class IncomeVsExpensesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_income_vs_expenses)
+        setContentView(R.layout.budget_activity_income_vs_expenses)
 
         val backButton = findViewById<TextView>(R.id.backButton)
         backButton.setOnClickListener { finish() }

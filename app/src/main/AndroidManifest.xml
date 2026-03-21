@@ -20,28 +20,28 @@
         </activity>
 
         <!-- ADDED: FinancialToolsActivity -->
-        <activity android:name="org.meerammafoundation.tools.FinancialToolsActivity" />
-        <activity android:name="org.meerammafoundation.tools.BudgetToolsActivity" />
-        <activity android:name="org.meerammafoundation.tools.HealthToolsActivity" />
-        <activity android:name="org.meerammafoundation.tools.FamilyToolsActivity" />
-        <activity android:name="org.meerammafoundation.tools.DocumentBuilderActivity" />
-        <activity android:name="org.meerammafoundation.tools.CultureToolsActivity" />
-        <activity android:name="org.meerammafoundation.tools.FavoritesActivity" />
-        <activity android:name="org.meerammafoundation.tools.AddFavoriteActivity" />
+        <activity android:name="org.meerammafoundation.tools.financial.FinancialToolsActivity" />
+        <activity android:name="org.meerammafoundation.tools.budget.BudgetToolsActivity" />
+        <activity android:name="org.meerammafoundation.tools.health.HealthToolsActivity" />
+        <activity android:name="org.meerammafoundation.tools.family.FamilyToolsActivity" />
+        <activity android:name="org.meerammafoundation.tools.document.DocumentBuilderActivity" />
+        <activity android:name="org.meerammafoundation.tools.culture.CultureToolsActivity" />
+        <activity android:name="org.meerammafoundation.tools.favorites.FavoritesActivity" />
+        <activity android:name="org.meerammafoundation.tools.favorites.AddFavoriteActivity" />
         <activity android:name="org.meerammafoundation.tools.AboutActivity" />
-        <activity android:name="org.meerammafoundation.tools.financialtools.EMICalculatorActivity" />
-        <activity android:name="org.meerammafoundation.tools.financialtools.LoanEligibilityActivity" />
-        <activity android:name="org.meerammafoundation.tools.financialtools.ROICalculatorActivity" />
-        <activity android:name="org.meerammafoundation.tools.financialtools.InflationCalculatorActivity" />
-        <activity android:name="org.meerammafoundation.tools.financialtools.PFPPFCalculatorActivity" />
-        <activity android:name="org.meerammafoundation.tools.financialtools.RDFDCalculatorActivity" />
-        <activity android:name="org.meerammafoundation.tools.financialtools.MutualFundCalculatorActivity" />
-        <activity android:name="org.meerammafoundation.tools.financialtools.SIPCalculatorActivity" />
-        <activity android:name="org.meerammafoundation.tools.financialtools.RetirementPlannerActivity" />
-        <activity android:name="org.meerammafoundation.tools.financialtools.TaxCalculatorActivity" />
-        <activity android:name="org.meerammafoundation.tools.financialtools.GratuityCalculatorActivity" />
+        <activity android:name="org.meerammafoundation.tools.financial.calculators.EMICalculatorActivity" />
+        <activity android:name="org.meerammafoundation.tools.financial.calculators.LoanEligibilityActivity" />
+        <activity android:name="org.meerammafoundation.tools.financial.calculators.ROICalculatorActivity" />
+        <activity android:name="org.meerammafoundation.tools.financial.calculators.InflationCalculatorActivity" />
+        <activity android:name="org.meerammafoundation.tools.financial.calculators.PFPPFCalculatorActivity" />
+        <activity android:name="org.meerammafoundation.tools.financial.calculators.RDFDCalculatorActivity" />
+        <activity android:name="org.meerammafoundation.tools.financial.calculators.MutualFundCalculatorActivity" />
+        <activity android:name="org.meerammafoundation.tools.financial.calculators.SIPCalculatorActivity" />
+        <activity android:name="org.meerammafoundation.tools.financial.calculators.RetirementPlannerActivity" />
+        <activity android:name="org.meerammafoundation.tools.financial.calculators.TaxCalculatorActivity" />
+        <activity android:name="org.meerammafoundation.tools.financial.calculators.GratuityCalculatorActivity" />
         <activity
-            android:name="org.meerammafoundation.tools.financialtools.NetWorthCalculatorActivity"
+            android:name="org.meerammafoundation.tools.financial.calculators.NetWorthCalculatorActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.meerammafoundation.tools.budget.MonthlyBudgetActivity"
@@ -56,13 +56,13 @@
             android:name="org.meerammafoundation.tools.budget.IncomeVsExpensesActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="org.meerammafoundation.tools.budget.BillSplitterMainActivity"
+            android:name="org.meerammafoundation.tools.budget.billSplitter.BillSplitterMainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="org.meerammafoundation.tools.budget.GroupSettingsActivity"
+            android:name="org.meerammafoundation.tools.budget.billSplitter.GroupSettingsActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="org.meerammafoundation.tools.budget.GroupDetailActivity"
+            android:name="org.meerammafoundation.tools.budget.billSplitter.GroupDetailActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.meerammafoundation.tools.budget.DebtPayoffActivity"

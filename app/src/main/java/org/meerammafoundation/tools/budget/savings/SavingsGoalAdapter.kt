@@ -96,7 +96,7 @@ class SavingsGoalAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GoalViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_savings_goal, parent, false)
+            .inflate(R.layout.savings_item_savings_goal, parent, false)
         return GoalViewHolder(view)
     }
 

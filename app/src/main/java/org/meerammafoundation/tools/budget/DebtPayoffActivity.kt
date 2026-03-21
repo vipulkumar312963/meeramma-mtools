@@ -35,7 +35,7 @@ class DebtPayoffActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_debt_payoff)
+        setContentView(R.layout.budget_activity_debt_payoff)
 
         // Back button
         val backButton = findViewById<TextView>(R.id.backButton)

@@ -7,12 +7,18 @@ import android.widget.Toast
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import org.meerammafoundation.tools.R
+import org.meerammafoundation.tools.budget.BudgetToolsActivity
+import org.meerammafoundation.tools.culture.CultureToolsActivity
+import org.meerammafoundation.tools.document.DocumentBuilderActivity
+import org.meerammafoundation.tools.family.FamilyToolsActivity
+import org.meerammafoundation.tools.favorites.FavoritesActivity
+import org.meerammafoundation.tools.financial.FinancialToolsActivity
+import org.meerammafoundation.tools.health.HealthToolsActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.main_activity_main)
 
         // Find all cards by their IDs
         val cardFinancial = findViewById<CardView>(R.id.cardFinancial)

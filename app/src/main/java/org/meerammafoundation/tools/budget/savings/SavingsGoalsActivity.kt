@@ -26,7 +26,7 @@ class SavingsGoalsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_savings_goals)
+        setContentView(R.layout.savings_activity_savings_goals)
 
         viewModel = ViewModelProvider(this)[SavingsGoalViewModel::class.java]
 
@@ -54,7 +54,7 @@ class SavingsGoalsActivity : AppCompatActivity() {
     }
 
     private fun showAddGoalDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_add_savings_goal, null)
+        val dialogView = layoutInflater.inflate(R.layout.savings_dialog_add_savings_goal, null)
         val etName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etGoalName)
         val etTarget = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etTargetAmount)
         val etCurrent = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etCurrentAmount)

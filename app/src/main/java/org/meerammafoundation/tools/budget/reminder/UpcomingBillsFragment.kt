@@ -23,7 +23,7 @@ class UpcomingBillsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_bill_reminder, container, false)
+        val view = inflater.inflate(R.layout.reminder_fragment_bill_reminder, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerViewBills)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())

@@ -42,7 +42,7 @@ class AnnualBudgetActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_annual_budget)
+        setContentView(R.layout.budget_activity_annual_budget)
 
         val backButton = findViewById<TextView>(R.id.backButton)
         backButton.setOnClickListener { finish() }

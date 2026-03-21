@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -29,7 +27,7 @@ class BillReminderActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bill_reminder)
+        setContentView(R.layout.reminder_activity_bill_reminder)
 
         viewModel = ViewModelProvider(this)[BillReminderViewModel::class.java]
 
@@ -57,7 +55,7 @@ class BillReminderActivity : AppCompatActivity() {
     }
 
     private fun showAddBillDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_add_bill_reminder, null)
+        val dialogView = layoutInflater.inflate(R.layout.reminder_dialog_add_bill_reminder, null)
         val etName = dialogView.findViewById<TextInputEditText>(R.id.etBillName)
         val etAmount = dialogView.findViewById<TextInputEditText>(R.id.etBillAmount)
         val spinnerCategory = dialogView.findViewById<Spinner>(R.id.spinnerCategory)

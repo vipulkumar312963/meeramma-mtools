@@ -22,7 +22,7 @@ class CompletedGoalsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_savings_goals, container, false)
+        val view = inflater.inflate(R.layout.savings_fragment_savings_goals, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerViewGoals)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())

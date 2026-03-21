@@ -26,7 +26,7 @@ class ActiveGoalsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_savings_goals, container, false)
+        val view = inflater.inflate(R.layout.savings_fragment_savings_goals, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerViewGoals)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -50,7 +50,7 @@ class ActiveGoalsFragment : Fragment() {
     }
 
     private fun showAddMoneyDialog(goal: SavingsGoal) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_add_money, null)
+        val dialogView = layoutInflater.inflate(R.layout.savings_dialog_add_money, null)
         val etAmount = dialogView.findViewById<TextInputEditText>(R.id.etAmount)
         val tvCurrent = dialogView.findViewById<TextView>(R.id.tvCurrentAmount)
         val tvTarget = dialogView.findViewById<TextView>(R.id.tvTargetAmount)
@@ -78,7 +78,7 @@ class ActiveGoalsFragment : Fragment() {
     }
 
     private fun showWithdrawDialog(goal: SavingsGoal) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_withdraw_money, null)
+        val dialogView = layoutInflater.inflate(R.layout.savings_dialog_withdraw_money, null)
         val etAmount = dialogView.findViewById<TextInputEditText>(R.id.etAmount)
         val tvCurrent = dialogView.findViewById<TextView>(R.id.tvCurrentAmount)
         val tvTarget = dialogView.findViewById<TextView>(R.id.tvTargetAmount)
@@ -110,7 +110,7 @@ class ActiveGoalsFragment : Fragment() {
     }
 
     private fun showEditDialog(goal: SavingsGoal) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_edit_savings_goal, null)
+        val dialogView = layoutInflater.inflate(R.layout.savings_dialog_edit_savings_goal, null)
         val etName = dialogView.findViewById<TextInputEditText>(R.id.etGoalName)
         val etTarget = dialogView.findViewById<TextInputEditText>(R.id.etTargetAmount)
 
