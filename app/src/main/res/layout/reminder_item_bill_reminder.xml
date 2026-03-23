@@ -110,6 +110,7 @@
                 android:textColor="@color/text_primary" />
         </LinearLayout>
 
+        <!-- ✅ Action Buttons Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -117,6 +118,7 @@
             android:layout_marginTop="12dp"
             android:gravity="end">
 
+            <!-- Mark Paid Button -->
             <Button
                 android:id="@+id/btnMarkPaid"
                 android:layout_width="wrap_content"
@@ -126,6 +128,17 @@
                 android:backgroundTint="@color/primary"
                 android:layout_marginEnd="8dp" />
 
+            <!-- ✅ Snooze Button - ADD THIS -->
+            <Button
+                android:id="@+id/btnSnooze"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Snooze"
+                android:textSize="12sp"
+                android:backgroundTint="@color/primary_light"
+                android:layout_marginEnd="8dp" />
+
+            <!-- Edit Button -->
             <ImageView
                 android:id="@+id/ivEditBill"
                 android:layout_width="24dp"
@@ -134,12 +147,14 @@
                 app:tint="@color/primary"
                 android:layout_marginEnd="8dp" />
 
+            <!-- Delete Button -->
             <ImageView
                 android:id="@+id/ivDeleteBill"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_delete"
                 app:tint="@color/text_secondary" />
+
         </LinearLayout>
 
     </LinearLayout>

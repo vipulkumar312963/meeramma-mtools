@@ -1,12 +1,14 @@
 package org.meerammafoundation.tools.budget.reminder
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import java.util.Calendar
 
 class BillReminderRepository(private val db: BillReminderDatabase) {
 
     private val dao = db.billReminderDao()
+
+    companion object {
+        private const val DAY_MS = 24L * 60L * 60L * 1000L
+    }
 
     fun getAllBills(): Flow<List<BillReminder>> = dao.getAllBills()
 
@@ -24,13 +26,16 @@ class BillReminderRepository(private val db: BillReminderDatabase) {
         recurrence: RecurrenceType,
         notes: String = ""
     ): Long {
+        val now = System.currentTimeMillis()
         val bill = BillReminder(
             name = name,
             amount = amount,
             dueDate = dueDate,
             category = category,
             recurrence = recurrence,
-            notes = notes
+            notes = notes,
+            createdAt = now,
+            updatedAt = now
         )
         return dao.insertBill(bill)
     }
@@ -41,7 +46,7 @@ class BillReminderRepository(private val db: BillReminderDatabase) {
     }
 
     suspend fun deleteBill(bill: BillReminder) {
-        dao.deleteBill(bill)
+        dao.deleteBillById(bill.id)
     }
 
     suspend fun markAsPaid(billId: Long) {
@@ -53,22 +58,14 @@ class BillReminderRepository(private val db: BillReminderDatabase) {
         dao.markAsUnpaid(billId, System.currentTimeMillis())
     }
 
-    fun getBillsWithStatus(): Flow<List<BillReminderWithStatus>> {
-        return dao.getUnpaidBills().map { bills ->
-            bills.map { bill ->
-                val daysUntilDue = ((bill.dueDate - System.currentTimeMillis()) / (24 * 60 * 60 * 1000)).toInt()
-                val status = when {
-                    daysUntilDue < 0 -> BillStatus.OVERDUE
-                    daysUntilDue == 0 -> BillStatus.DUE_TODAY
-                    daysUntilDue <= 7 -> BillStatus.UPCOMING
-                    else -> BillStatus.UPCOMING
-                }
-                BillReminderWithStatus(
-                    bill = bill,
-                    daysUntilDue = daysUntilDue,
-                    status = status
-                )
-            }.sortedBy { it.daysUntilDue }
+    suspend fun snoozeBill(billId: Long, days: Int) {
+        val snoozedUntil = System.currentTimeMillis() + (days * DAY_MS)
+        dao.snoozeBill(billId, snoozedUntil, System.currentTimeMillis())
+    }
+
+    suspend fun updateLastNotifiedAtBatch(billIds: List<Long>, lastNotifiedAt: Long) {
+        if (billIds.isNotEmpty()) {
+            dao.updateLastNotifiedAtBatch(billIds, lastNotifiedAt, System.currentTimeMillis())
         }
     }
 }

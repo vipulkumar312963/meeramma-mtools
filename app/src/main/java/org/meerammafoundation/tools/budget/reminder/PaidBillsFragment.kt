@@ -28,9 +28,11 @@ class PaidBillsFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerViewBills)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        // ✅ Fix: Add snooze callback (empty lambda for paid bills)
         adapter = BillReminderAdapter(
             emptyList(),
-            { bill -> showMarkUnpaidDialog(bill) },
+            { bill -> showMarkUnpaidDialog(bill) },  // Mark as Unpaid for paid bills
+            { _, _ -> },  // ✅ Snooze - no action for paid bills
             { bill -> showEditBillDialog(bill) },
             { bill -> showDeleteBillDialog(bill) }
         )
@@ -39,14 +41,14 @@ class PaidBillsFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[BillReminderViewModel::class.java]
 
         viewModel.paidBills.observe(viewLifecycleOwner) { bills ->
-            val paidBillsWithStatus = bills.map { bill ->
+            val paidWithStatus = bills.map { bill ->
                 BillReminderWithStatus(
                     bill = bill,
                     daysUntilDue = 0,
                     status = BillStatus.PAID
                 )
             }
-            adapter.updateData(paidBillsWithStatus)
+            adapter.updateData(paidWithStatus)
         }
 
         return view
@@ -58,6 +60,7 @@ class PaidBillsFragment : Fragment() {
             .setMessage("Mark '${bill.name}' as unpaid?")
             .setPositiveButton("Yes") { _, _ ->
                 viewModel.markAsUnpaid(bill.id)
+                Toast.makeText(requireContext(), "Bill marked as unpaid", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("No", null)
             .show()
@@ -73,6 +76,7 @@ class PaidBillsFragment : Fragment() {
             .setMessage("Are you sure you want to delete '${bill.name}'?")
             .setPositiveButton("Delete") { _, _ ->
                 viewModel.deleteBill(bill)
+                Toast.makeText(requireContext(), "Bill deleted", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancel", null)
             .show()

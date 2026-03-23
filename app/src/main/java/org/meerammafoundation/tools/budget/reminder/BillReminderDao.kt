@@ -12,8 +12,9 @@ interface BillReminderDao {
     @Update
     suspend fun updateBill(bill: BillReminder)
 
-    @Delete
-    suspend fun deleteBill(bill: BillReminder)
+    // ✅ Fixed: Use @Query, not @Delete
+    @Query("DELETE FROM bill_reminders WHERE id = :billId")
+    suspend fun deleteBillById(billId: Long)
 
     @Query("SELECT * FROM bill_reminders ORDER BY due_date ASC")
     fun getAllBills(): Flow<List<BillReminder>>
@@ -27,12 +28,29 @@ interface BillReminderDao {
     @Query("SELECT * FROM bill_reminders WHERE id = :billId")
     fun getBillById(billId: Long): Flow<BillReminder?>
 
-    @Query("UPDATE bill_reminders SET is_paid = 1, paid_date = :paidDate, updated_at = :updatedAt WHERE id = :billId")
+    @Query("""
+        UPDATE bill_reminders 
+        SET is_paid = 1, 
+            paid_date = :paidDate, 
+            snoozed_until = NULL, 
+            last_notified_at = NULL, 
+            updated_at = :updatedAt 
+        WHERE id = :billId
+    """)
     suspend fun markAsPaid(billId: Long, paidDate: Long, updatedAt: Long)
 
     @Query("UPDATE bill_reminders SET is_paid = 0, paid_date = NULL, updated_at = :updatedAt WHERE id = :billId")
     suspend fun markAsUnpaid(billId: Long, updatedAt: Long)
 
-    @Query("DELETE FROM bill_reminders WHERE id = :billId")
-    suspend fun deleteBillById(billId: Long)
+    @Query("""
+        UPDATE bill_reminders 
+        SET snoozed_until = :snoozedUntil, 
+            last_notified_at = NULL, 
+            updated_at = :updatedAt 
+        WHERE id = :billId
+    """)
+    suspend fun snoozeBill(billId: Long, snoozedUntil: Long, updatedAt: Long)
+
+    @Query("UPDATE bill_reminders SET last_notified_at = :lastNotifiedAt, updated_at = :updatedAt WHERE id IN (:billIds)")
+    suspend fun updateLastNotifiedAtBatch(billIds: List<Long>, lastNotifiedAt: Long, updatedAt: Long)
 }
